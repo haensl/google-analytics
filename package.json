@@ -1,0 +1,84 @@
+{
+  "name": "@haensl/google-analytics",
+  "version": "1.0.0",
+  "description": "Google Analytics 4 abstraction for gtag and measurement protocol.",
+  "module": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "lint:junit": "eslint --format junit -o test-results/eslint/results.xml '**/*.js'",
+    "prepare": "if [ \"${NODE_ENV}\" != 'production' ] && [ -z \"${CI}\" ]; then husky install; fi",
+    "test": "jest --runInBand --no-cache --colors --passWithNoTests",
+    "test:junit": "jest --runInBand --no-cache --ci --reporters='default' --reporters='jest-junit' --passWithNoTests",
+    "tdd": "jest --runInBand --colors --watch"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true,
+      "jest": true,
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 11,
+      "sourceType": "module"
+    },
+    "extends": [
+      "@haensl"
+    ]
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "package.test"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "jest-junit": {
+    "outputDirectory": "test-results/jest",
+    "outputName": "results.xml",
+    "suitName": "@haensl/environments unit tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/haensl/google-analytics.git"
+  },
+  "keywords": [
+    "Google",
+    "Analytics",
+    "Google",
+    "Analytics",
+    "4",
+    "GA",
+    "GA",
+    "4",
+    "GA4",
+    "gtag",
+    "gtag.js",
+    "measurement protocol"
+  ],
+  "author": {
+    "name": "HP Dietz",
+    "url": "https://hpdietz.com",
+    "twitter": "@h_p_d",
+    "email": "h.p.dietz@gmail.com"
+  },
+  "funding": "https://github.com/sponsors/haensl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/haensl/google-analytics/issues"
+  },
+  "homepage": "https://github.com/haensl/google-analytics#readme",
+  "devDependencies": {
+    "@haensl/eslint-config": "^1.4.6",
+    "eslint": "^8.43.0",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "jest-junit": "^16.0.0"
+  },
+  "dependencies": {
+    "@haensl/http": "^1.0.0",
+    "@haensl/services": "^1.4.6"
+  }
+}

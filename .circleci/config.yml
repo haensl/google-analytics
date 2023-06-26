@@ -1,0 +1,200 @@
+# https://circleci.com/docs/2.1/language-javascript/
+version: 2.1
+
+commands:
+  determine-changelog-version:
+    description: "Exports the latest version in CHANGELOG as VERSION environment variable."
+    steps:
+      - run:
+          name: determine changelog version
+          working_directory: ~/google-analytics
+          command: |
+            VERSION=$(head -n1 CHANGELOG.md | grep -o '\([0-9]\+\.\)\{2\}[0-9]\+')
+            echo "export VERSION=${VERSION}" >> $BASH_ENV
+            echo "export CHANGELOG_VERSION=${VERSION}" >> $BASH_ENV
+            echo "changelog version: ${VERSION}"
+
+  determine-package-json-version:
+    description: "Exports the version in package.json as PACKAGE_JSON_VERSION environment variable."
+    steps:
+      - run:
+          name: determine package.json version
+          working_directory: ~/google-analytics
+          command: |
+            PACKAGE_JSON_VERSION=$(node -e "console.info(require('./package').version)")
+            echo "export PACKAGE_JSON_VERSION=${PACKAGE_JSON_VERSION}" >> $BASH_ENV
+            echo "package.json version: ${PACKAGE_JSON_VERSION}"
+
+  determine-published-version:
+    description: "Exports the latest version published to NPM (default: 0.0.0) as LIVE_VERSION environment variable."
+    steps:
+      - run:
+          name: determine latest published version
+          working_directory: ~/google-analytics
+          command: |
+            LIVE_VERSION=$(npm show @haensl/google-analytics version || true)
+            [ -z "${LIVE_VERSION}" ] && LIVE_VERSION='0.0.0'
+            echo "export LIVE_VERSION=${LIVE_VERSION}" >> ${BASH_ENV}
+            echo "latest published version: ${LIVE_VERSION}"
+
+  determine-versions:
+    description: "Determine versions in changelog, package.json and live."
+    steps:
+      - determine-changelog-version
+      - determine-package-json-version
+      - determine-published-version
+
+  init:
+    steps:
+      - run:
+          name: update npm
+          command: sudo npm install -g npm@latest
+      - run:
+          name: environment
+          command: |
+            node --version
+            npm --version
+
+  prepare-repo:
+    description: "Checkout, install (dev) dependencies and determine versions."
+    steps:
+      - checkout
+      - restore_cache:
+          keys: dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: install dependencies
+          command: npm i
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package-lock.json" }}
+      - determine-versions
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/google-analytics
+    steps:
+      - init
+      - prepare-repo
+      - run:
+          name: create test-results-folder
+          command: mkdir -p test-results/eslint
+      - run:
+          name: lint
+          command: npm run lint:junit
+      - store_test_results:
+          path: test-results
+
+  bundle:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/google-analytics
+    steps:
+      - init
+      - prepare-repo
+      - run:
+          name: pack
+          environment:
+            NODE_ENV: 'production'
+          command: |
+            npm pack
+            mv haensl-google-analytics-${VERSION}.tgz haensl-google-analytics.tgz
+      - store_artifacts:
+          path: haensl-google-analytics.tgz
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - CHANGELOG.md
+            - README.md
+            - LICENSE
+            - package.json
+            - package-lock.json
+            - index.js
+            - measurement-protocoljs
+            - .npmignore
+            - haensl-google-analytics.tgz
+
+  ensure-versioned-correctly:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/google-analytics
+    steps:
+      - init
+      - checkout
+      - determine-versions
+      - run:
+          name: changelog matches package.json
+          command: |
+            test ${PACKAGE_JSON_VERSION} = ${CHANGELOG_VERSION}
+      - run:
+          name: package.json greater than live
+          command: |
+            node \<<VERSION_CHECK
+            const pkgVersion = require('./package').version
+              .split('.')
+              .map((i) => parseInt(i, 10));
+            const liveVersion = process.env.LIVE_VERSION
+              .split('.')
+              .map((i) => parseInt(i, 10));
+            const isGreater = pkgVersion.reduce((isGreater, part, i) => {
+              return isGreater || (part > liveVersion[i]);
+            }, false);
+            if (!isGreater) {
+              process.exit(1);
+            }
+            VERSION_CHECK
+
+  publish:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/google-analytics
+    steps:
+      - init
+      - attach_workspace:
+          at: ~/google-analytics
+      - run:
+          name: setup npm registry token
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+      - run:
+          name: publish node module
+          command: npm publish --access public
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github
+    steps:
+      - attach_workspace:
+          at: ~/google-analytics
+      - determine-changelog-version
+      - run:
+          name: publish github release
+          working_directory: ~/google-analytics
+          command: |
+            cp ./haensl-google-analytics.tgz ./haensl-google-analytics-${VERSION}.tgz
+            CHANGES=$(awk "/## ${VERSION}/,/^$/" CHANGELOG.md)
+            echo "Publishing release v${VERSION} to Github.\nChanges:"
+            echo $CHANGES
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete -n "v${VERSION}" -b "${CHANGES}" "v${VERSION}" ./haensl-google-analytics-${VERSION}.tgz
+
+workflows:
+  version: 2
+  default:
+    when: always
+    jobs:
+      - lint
+      - ensure-versioned-correctly
+      - bundle:
+          requires:
+            - lint
+            - ensure-versioned-correctly
+      - publish:
+          requires:
+            - bundle
+          filters:
+            branches:
+              only: master
+      - publish-github-release:
+          requires:
+            - publish
