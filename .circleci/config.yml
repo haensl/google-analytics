@@ -90,7 +90,7 @@ jobs:
   test:
     docker:
       - image: cimg/node:current
-    working_directory: ~/iso-log
+    working_directory: ~/google-analytics
     steps:
       - init
       - prepare-repo
