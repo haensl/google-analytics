@@ -1,0 +1,11 @@
+__snapshots__/
+__tests__/
+coverage/
+src/
+test-results/
+.*
+*.md
+*.test.js
+*.config.js
+*.setup.js
+*.tgz
