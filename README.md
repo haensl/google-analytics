@@ -46,7 +46,7 @@ $ yarn add @haensl/google-analytics
 Client/tag and measurement protocol offer similar methods, but differ in initialization and dependencies.
 
 * [gtag](#tag)
-  * [`init(confg)`](#tag/init): Initialize the client lib.
+  * [`init(confg)`](#tag/init): Initialize the gtag module.
   * [`consent(granted)`](#tag/consent): Consent to tracking.
   * [`event(data)`](#tag/event): Track an event.
   * [`exception(data)`](#tag/exception): Track an exception.
@@ -55,7 +55,7 @@ Client/tag and measurement protocol offer similar methods, but differ in initial
   * [`setUserProperty({ name, value })`](#tag/user_property)
 
 * [Measurement protocol](#measurement_protocol)
-  * [`init(confg)`](#measurement_protocol/init): Initialize the client lib.
+  * [`init(confg)`](#measurement_protocol/init): Initialize the measurement protocol module.
   * [`clientId(cookies)`](#measurement_protocol/clientid): Get a client id.
   * [`async event(data)`](#measurement_protocol/event): Track an event.
   * [`async exception(data)`](#measurement_protocol/exception): Track an exception.
@@ -272,7 +272,7 @@ setUserProperty({
 
 `@haensl/google-analytics/measurement-protocol`
 
-The measurement protocol implementation requires an [`API secret`](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#api_secret)  as well as a [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation at initialization.
+The measurement protocol implementation requires an [API secret](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#api_secret)  as well as a [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation at initialization.
 
 #### `init(config)` <a name="measurement_protocol/init"></a>
 
@@ -289,7 +289,7 @@ init({
   fetch,
 
   /**
-   * Google measurement id.
+   * Google measurement id. String.
    *
    * E.g. 'G-123ABC456D'
    */
@@ -301,7 +301,7 @@ init({
   measurementSecret,
 
   /**
-   * Measurement API URL.
+   * Measurement API URL. String.
    */
   measurementUrl = 'https://www.google-analytics.com/mp/collect'
 })
@@ -332,6 +332,26 @@ Generates a client id from timestamps if not found in cookies.
 ```javascript
 clientId(cookies = {}) => String
 ```
+
+Example: Usage with [`next-cookies`](https://www.npmjs.com/package/next-cookies)
+
+```javascript
+import { cookies } from 'next-cookies';
+import { clientId, pageView } from '@haensl/google-analytics/measurement-protocol';
+
+
+export const getServerSideProps = async (ctx) => {
+  const requestCookies = cookies(ctx);
+  const requestClientId = clientId(requestCookies);
+
+  pageView({
+    title: 'my serverside page',
+    clientId: requestClientId,
+    location: ctx.req.url
+  });
+};
+```
+
 
 #### `async event({ name, params, clientId })` <a name="measurement_protocol/event"></a>
 
