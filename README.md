@@ -115,6 +115,17 @@ init({
 
 Grant or deny tracking consent.
 
+Granting/Denying tracking consent toggles:
+
+* [Google signals](https://support.google.com/analytics/answer/9445345#zippy=%2Cin-this-article)
+* [Ad personalization signals](https://support.google.com/google-ads/answer/7548399)
+* [Restricted data processing](https://support.google.com/google-ads/answer/9606827?sjid=3120074697094987464-EU#zippy=%2Cedit-your-google-tag-to-disable-ad-personalization-signals%2Cedit-your-google-tag-to-enable-restricted-data-processing)
+* [Ads data redaction](https://developers.google.com/tag-platform/devguides/consent#redact_ads_data)
+* [Ad storage](https://developers.google.com/tag-platform/gtagjs/reference#consent)
+* [Analytics storage](https://developers.google.com/tag-platform/gtagjs/reference#consent)
+
+For more information on consent mode, see [Google's docs](https://developers.google.com/tag-platform/devguides/privacy).
+
 ```javascript
 consent(granted = false)
 ```
