@@ -1,10 +1,11 @@
 # @haensl/google-analytics
 
-Google Analytics 4 JavaScript abstraction for [`ga4`](https://developers.google.com/analytics/devguides/collection/ga4) (client) and [`measurement protocol`](https://developers.google.com/analytics/devguides/collection/protocol/ga4) (server).
+Google Analytics 4 JavaScript abstraction for [`ga4`](https://developers.google.com/analytics/devguides/collection/ga4) (gtag) and [`measurement protocol`](https://developers.google.com/analytics/devguides/collection/protocol/ga4) (API).
 
-[![NPM](https://nodei.co/npm/@haensl%2Fgoogle-analytics.png?downloads=true)](https://nodei.co/npm/@haensl%2Fiso-log/)
+[![NPM](https://nodei.co/npm/@haensl%2Fgoogle-analytics.png?downloads=true)](https://nodei.co/npm/@haensl%2Fgoogle-analytics/)
 
-[![npm version](https://badge.fury.io/js/@haensl%2Fiso-log.svg)](http://badge.fury.io/js/@haensl%2Fgoogle-analytics)
+[![npm version](https://badge.fury.io/js/@haensl%2Fgoogle-analytics.svg)](http://badge.fury.io/js/@haensl%2Fgoogle-analytics)
+
 [![CircleCI](https://circleci.com/gh/haensl/google-analytics.svg?style=svg)](https://circleci.com/gh/haensl/google-analytics)
 
 `@haensl/google-analytics` is build with different runtime platforms (browser vs. Node.js) in mind:
@@ -22,7 +23,7 @@ Use [measurement protocol](https://developers.google.com/analytics/devguides/col
 
 `import { init, event } from '@haensl/google-analytics/measurement-protocol'`;
 
-**Attention:** The measurement protocol abstraction requires some [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation to work, e.g. [`node-fetch`](https://www.npmjs.com/package/node-fetch), [`cross-fetch`](https://www.npmjs.com/package/cross-fetch), or similar. See [`init(config)`](#measurement_protocol/init).
+**Attention:** The measurement protocol abstraction requires a [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation to work, e.g. [`node-fetch`](https://www.npmjs.com/package/node-fetch), [`cross-fetch`](https://www.npmjs.com/package/cross-fetch), or similar. See [`init(config)`](#measurement_protocol/init).
 
 
 ## Installation
@@ -66,7 +67,7 @@ Client/tag and measurement protocol offer similar methods, but differ in initial
 
 `@haensl/google-analytics`
 
-**The tag implementation relies on the existence of `window.gtag`. Please ensure that your page [`loads the Google Analytics 4 tag`](https://support.google.com/analytics/answer/9304153#add-tag&zippy=%2Cweb).**
+**The tag implementation relies on the existence of `window.gtag`. Please ensure that your page [`loads the Google Analytics 4 tag`](https://support.google.com/analytics/answer/9304153#add-tag&zippy=%2Cweb), e.g. by including a `<script src="...">` to fetch `gtag.js` or via a component like [`@haensl/next-google-analytics`](https://github.com/haensl/next-google-analytics)**
 
 #### `init(config)` <a name="tag/init"></a>
 
@@ -228,7 +229,7 @@ setUserId({
 
 `import { setUserProperty } from '@haensl/google-analytics'`
 
-Set a [user property](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#user_properties).
+Set a [user property](https://developers.google.com/analytics/devguides/collection/ga4/reference/config#user_properties) (formerly known as dimension).
 
 ```javascript
 setUserProperty({
