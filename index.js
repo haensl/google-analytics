@@ -110,9 +110,7 @@ export const event = ({ name, params }) => {
     throw error;
   }
 
-  return setTimeout(() => {
-    window.gtag('event', name, params);
-  });
+  window.gtag('event', name, params);
 };
 
 export const setUserProperty = ({ name, value }) => {
@@ -121,10 +119,8 @@ export const setUserProperty = ({ name, value }) => {
     throw error;
   }
 
-  return setTimeout(() => {
-    window.gtag('set', 'user_properties', {
-      [name]: value
-    });
+  window.gtag('set', 'user_properties', {
+    [name]: value
   });
 };
 
@@ -134,15 +130,13 @@ export const setUserId = ({ id }) => {
     throw error;
   }
 
-  return setTimeout(() => {
-    window.gtag('set', {
-      'user_id': id
-    });
+  window.gtag('set', {
+    'user_id': id
   });
 };
 
 export const exception = ({ description, fatal = false }) => {
-  return event({
+  event({
     name: 'exception',
     params: {
       description,
@@ -152,7 +146,7 @@ export const exception = ({ description, fatal = false }) => {
 };
 
 export const pageView = ({ location, title }) => {
-  return event({
+  event({
     name: 'page_view',
     params: {
       page_title: title,

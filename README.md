@@ -12,19 +12,17 @@ Google Analytics 4 JavaScript abstraction for [`ga4`](https://developers.google.
 
 **On the client:**
 
-Use the tag (default): `@haensl/google-analytics`
+Use [`window.gtag`](https://support.google.com/analytics/answer/9304153#add-tag) (default): `@haensl/google-analytics`
 
 `import { init, event } from '@haensl/google-analytics'`;
 
 **On the server:**
 
-Use measurement protocol: `@haensl/google-analytics/measurement-protocol`
+Use [measurement protocol](https://developers.google.com/analytics/devguides/collection/protocol/ga4): `@haensl/google-analytics/measurement-protocol`
 
 `import { init, event } from '@haensl/google-analytics/measurement-protocol'`;
 
-**Attention**
-
-The measurement protocol export requires some `fetch` implementation to work, e.g. [`node-fetch`](https://www.npmjs.com/package/node-fetch), or similar. See [`init()`](#measurement_protocol/init).
+**Attention:** The measurement protocol abstraction requires some [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation to work, e.g. [`node-fetch`](https://www.npmjs.com/package/node-fetch), [`cross-fetch`](https://www.npmjs.com/package/cross-fetch), or similar. See [`init(config)`](#measurement_protocol/init).
 
 
 ## Installation
@@ -114,7 +112,7 @@ init({
 
 `import { consent } from '@haensl/google-analytics'`
 
-Grand or deny tracking consent.
+Grant or deny tracking consent.
 
 ```javascript
 consent(granted = false)
@@ -153,7 +151,7 @@ event({
    * An object mapping names to strings or numbers.
    */
   params
-}) => TimeoutId
+})
 ```
 
 Example: Sign up event
@@ -187,7 +185,7 @@ exception({
    * Whether or not the error is fatal. Boolean.
    */
   fatal = false
-}) => TimeoutId
+})
 ```
 
 #### `pageView({ location, title })` <a name="tag/pageview"></a>
@@ -207,7 +205,7 @@ pageView({
    * Page location. String.
    */
   location
-}) => TimeoutId
+})
 ```
 
 #### `setUserId({ id })` <a name="tag/user_id"></a>
@@ -222,7 +220,7 @@ setUserId({
    * A user id. String.
    */
   id
-}) => TimeoutId
+})
 ```
 
 
@@ -243,7 +241,7 @@ setUserProperty({
    * User property value. String or number.
    */
   value
-}) => TimeoutId
+})
 ```
 
 Example: track the users color scheme:
@@ -262,7 +260,7 @@ setUserProperty({
 
 `@haensl/google-analytics/measurement-protocol`
 
-The measurement protocol implementation requires an [`API secret`](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#api_secret)  as well as a `fetch` implementation at initialization on top of the `measurementId`.
+The measurement protocol implementation requires an [`API secret`](https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#api_secret)  as well as a [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) implementation at initialization.
 
 #### `init(config)` <a name="measurement_protocol/init"></a>
 
@@ -310,11 +308,14 @@ init({
 });
 ```
 
-#### clientId(cookies) <a name="measurement_protocol/clientid"></a>
+#### `clientId(cookies)`<a name="measurement_protocol/clientid"></a>
 
 `import { clientId } from '@haensl/google-analytics/measurement-protocol'`
 
-Tries to parse [Google Analytics client id](https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag#sending_events_2) from the given cookies object. Generates one from timestamps if not in cookies.
+
+Tries to parse the [Google Analytics client id](https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag#sending_events_2) from the given cookies object.
+
+Generates a client id from timestamps if not found in cookies.
 
 ```javascript
 clientId(cookies = {}) => String
@@ -365,7 +366,7 @@ await event({
 
 #### `async exception({ description, fatal clientId })` <a name="measurement_protocol/exception"></a>
 
-`import { exception } from '@haensl/google-analytics'`
+`import { exception } from '@haensl/google-analytics/measurement-protocol'`
 
 Tracks an exception. Alias for [`event({ name: 'exception', ... })`](#tag/event).
 
@@ -461,7 +462,7 @@ async setUserProperty({
 Example: track the users color scheme:
 
 ```javascript
-import { clientId, setUserProperty } from '@haensl/google-analytics';
+import { clientId, setUserProperty } from '@haensl/google-analytics/measurement-protocol';
 
 await setUserProperty({
  name: 'appearance',
