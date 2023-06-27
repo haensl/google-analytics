@@ -87,6 +87,19 @@ jobs:
       - store_test_results:
           path: test-results
 
+  test:
+    docker:
+      - image: cimg/node:current
+    working_directory: ~/iso-log
+    steps:
+      - init
+      - prepare-repo
+      - run:
+          name: unit tests
+          command: npm run test:junit
+      - store_test_results:
+          path: test-results
+
   bundle:
     docker:
       - image: cimg/node:lts

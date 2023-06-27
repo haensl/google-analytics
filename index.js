@@ -1,4 +1,4 @@
-import { platform } from '@hasensl/services';
+import { platform } from '@haensl/services';
 
 if (platform.hasWindow) {
   if (!window.dataLayer) {

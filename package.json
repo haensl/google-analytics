@@ -12,6 +12,9 @@
     "test:junit": "jest --runInBand --no-cache --ci --reporters='default' --reporters='jest-junit' --passWithNoTests",
     "tdd": "jest --runInBand --colors --watch"
   },
+  "babel": {
+    "presets": ["@babel/preset-env"]
+  },
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -28,12 +31,24 @@
     ]
   },
   "jest": {
-    "modulePathIgnorePatterns": [
-      "package.test"
-    ],
+    "globals": {
+      "NODE_ENV": "test"
+    },
+    "verbose": true,
+    "clearMocks": true,
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy",
+      "\\.svg": "<rootDir>/__mocks__/svgrMock.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js"
+    },
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
-      "/node_modules/"
-    ]
+      "/node_modules/",
+      "/.next/"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "jest-junit": {
     "outputDirectory": "test-results/jest",
@@ -71,10 +86,13 @@
   },
   "homepage": "https://github.com/haensl/google-analytics#readme",
   "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
     "@haensl/eslint-config": "^1.4.6",
     "eslint": "^8.43.0",
     "husky": "^8.0.3",
     "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "jest-junit": "^16.0.0"
   },
   "dependencies": {
