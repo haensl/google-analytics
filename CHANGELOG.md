@@ -1,3 +1,7 @@
+## 1.1.0
+* [#5: Add `install` method.](https://github.com/haensl/google-analytics/issues/5)
+* Update dependencies.
+
 ## 1.0.1
 * [#3: Update dependencies.](https://github.com/haensl/google-analytics/issues/3)
 

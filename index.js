@@ -1,19 +1,5 @@
 import { platform } from '@haensl/services';
 
-if (platform.hasWindow) {
-  if (!window.dataLayer) {
-    window.dataLayer = [];
-  }
-
-  if (!window.gtag) {
-    window.gtag = function(...args) {
-      window.dataLayer.push(args);
-    };
-  }
-
-  window.gtag('js', new Date());
-}
-
 // European Union
 export const regionEU = [
   'AT', // Austria
@@ -44,6 +30,22 @@ export const regionEU = [
   'SE' // Sweden
 ];
 
+export const install = () => {
+  if (platform.hasWindow) {
+    if (!window.dataLayer) {
+      window.dataLayer = [];
+    }
+
+    if (!window.gtag) {
+      window.gtag = function(...args) {
+        window.dataLayer.push(args);
+      };
+    }
+
+    window.gtag('js', new Date());
+  }
+};
+
 export const init = ({
   measurementId,
   debug = false,
@@ -55,6 +57,8 @@ export const init = ({
     const error = new Error('Cannot use client lib without window.');
     throw error;
   }
+
+  install();
 
   window.gtag('config', measurementId, {
     anonymize_ip: anonymizeIp,
@@ -157,6 +161,7 @@ export const pageView = ({ location, title }) => {
 
 export default {
   init,
+  install,
   consent,
   event,
   exception,

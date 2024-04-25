@@ -47,6 +47,7 @@ Client/tag and measurement protocol offer similar methods, but differ in initial
 
 * [gtag](#tag)
   * [`init(confg)`](#tag/init): Initialize the gtag module.
+  * [`install`](#tag/install): Installs gtag stubs on `window`.
   * [`consent(granted)`](#tag/consent): Consent to tracking.
   * [`event(data)`](#tag/event): Track an event.
   * [`exception(data)`](#tag/exception): Track an exception.
@@ -73,7 +74,7 @@ Client/tag and measurement protocol offer similar methods, but differ in initial
 
 `import { init } from '@haensl/google-analytics'`
 
-Initializes the tracking module. You only need to call this once, e.g. when your app boots.
+Initializes the tracking module. You only need to call this once, e.g. when your app boots. This also calls [`install()`](#tag/install).
 
 Tracking consent is defaulted to `false` for EU region. See [`consent()`](#tag/consent).
 
@@ -108,6 +109,12 @@ init({
   trackingConsent = false
 })
 ```
+
+#### `install()` <a name="tag/install"></a>
+
+`import { install } from '@haensl/google-analytics'`
+
+Installs `window.dataLayer` and `window.gtag` stubs, i.e. [Google Docs](https://developers.google.com/tag-platform/tag-manager/datalayer#installation). Is called on [`init()`](#tag/init).
 
 #### `consent(granted = false)` <a name="tag/consent"></a>
 
