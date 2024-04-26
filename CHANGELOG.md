@@ -1,3 +1,6 @@
+## 1.1.1
+* [#10: Fix `ga` stub.](https://github.com/haensl/google-analytics/issues/10)
+
 ## 1.1.0
 * [#5: Add `install` method.](https://github.com/haensl/google-analytics/issues/5)
 * Update dependencies.

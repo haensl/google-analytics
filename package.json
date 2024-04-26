@@ -1,6 +1,6 @@
 {
   "name": "@haensl/google-analytics",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Google Analytics 4 service abstraction for gtag and measurement protocol.",
   "module": "index.js",
   "type": "module",
