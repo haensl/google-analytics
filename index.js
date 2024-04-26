@@ -37,8 +37,8 @@ export const install = () => {
     }
 
     if (!window.gtag) {
-      window.gtag = function(...args) {
-        window.dataLayer.push(args);
+      window.gtag = function() {
+        window.dataLayer.push(arguments); // eslint-disable-line
       };
     }
 
