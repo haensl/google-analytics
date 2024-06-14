@@ -1,3 +1,6 @@
+## 1.2.0
+* [#8: Add Switzerland to region requiring consent.](https://github.com/haensl/google-analytics/issues/8)
+
 ## 1.1.1
 * [#10: Fix `ga` stub.](https://github.com/haensl/google-analytics/issues/10)
 

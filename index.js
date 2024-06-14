@@ -30,6 +30,11 @@ export const regionEU = [
   'SE' // Sweden
 ];
 
+export const regionConsent = [
+  'CH', // Switzerland
+  'UK' // United Kingdom
+] + regionEU;
+
 export const install = () => {
   if (platform.hasWindow) {
     if (!window.dataLayer) {
@@ -69,7 +74,7 @@ export const init = ({
   window.gtag('consent', 'default', {
     ad_storage: 'denied',
     analytics_storage: 'denied',
-    region: regionEU
+    region: regionConsent
   });
 
   consent(trackingConsent);
