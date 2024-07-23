@@ -86,6 +86,7 @@
   },
   "homepage": "https://github.com/haensl/google-analytics#readme",
   "files": [
+    "index.js",
     "measurement-protocol.js"
   ],
   "devDependencies": {
