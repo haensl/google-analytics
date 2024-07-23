@@ -1,13 +1,13 @@
 {
   "name": "@haensl/google-analytics",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Google Analytics 4 service abstraction for gtag and measurement protocol.",
   "module": "index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint '**/*.js'",
     "lint:junit": "eslint --format junit -o test-results/eslint/results.xml '**/*.js'",
-    "prepare": "if [ \"${NODE_ENV}\" != 'production' ] && [ -z \"${CI}\" ]; then husky install; fi",
+    "prepare": "if [ \"${NODE_ENV}\" != 'production' ] && [ -z \"${CI}\" ]; then husky || true; fi",
     "test": "jest --runInBand --no-cache --colors --passWithNoTests",
     "test:junit": "jest --runInBand --no-cache --ci --reporters='default' --reporters='jest-junit' --passWithNoTests",
     "tdd": "jest --runInBand --colors --watch"

@@ -1,3 +1,6 @@
+## 1.2.2
+* [#10: Fix CI publishing.](https://github.com/haensl/google-analytics/issues/10)
+
 ## 1.2.1
 * [#10: Ensure measurement-protocol implementation is bundled correctly.](https://github.com/haensl/google-analytics/issues/10)
 * Update dependencies.
