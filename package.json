@@ -1,6 +1,6 @@
 {
   "name": "@haensl/google-analytics",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Google Analytics 4 service abstraction for gtag and measurement protocol.",
   "module": "index.js",
   "type": "module",
@@ -85,6 +85,10 @@
     "url": "https://github.com/haensl/google-analytics/issues"
   },
   "homepage": "https://github.com/haensl/google-analytics#readme",
+  "files": [
+    "index.js",
+    "measurement-protocol.js"
+  ],
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
