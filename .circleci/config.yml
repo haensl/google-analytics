@@ -166,7 +166,7 @@ jobs:
     steps:
       - init
       - attach_workspace:
-        at: ~/google-analytics
+          at: ~/google-analytics
       - run:
           name: setup npm registry token
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
